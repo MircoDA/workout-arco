@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tiro con l'Arco Workout | Polso Sicuro</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.25);
+      --amber: #f59e0b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 120px;
+    }
+
+    header {
+      background: #111827;
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--card-border);
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    header h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    header p {
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-top: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .day-selector {
+      display: flex;
+      background: #111827;
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 1px solid var(--card-border);
+    }
+
+    .day-btn {
+      flex: 1;
+      padding: 12px 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .day-btn.active {
+      background: var(--accent);
+      color: #064e3b;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      transition: transform 0.15s ease, border-color 0.2s ease;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .exercise-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .target-badge {
+      font-size: 0.75rem;
+      background: #334155;
+      color: #cbd5e1;
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+      margin-left: 8px;
+    }
+
+    .wrist-shield {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      color: var(--amber);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .sets-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .set-row {
+      display: grid;
+      grid-template-columns: 50px 1fr 1fr 60px;
+      gap: 8px;
+      align-items: center;
+      background: #0f172a;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+    }
+
+    .set-label {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .input-field {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      border-radius: 6px;
+      padding: 6px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      width: 100%;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .check-btn {
+      background: #334155;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      height: 34px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+    }
+
+    .check-btn.completed {
+      background: var(--accent);
+      color: #064e3b;
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    /* Floating Timer Bar */
+    .timer-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(17, 24, 39, 0.95);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--card-border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 680px;
+      margin: 0 auto;
+      z-index: 50;
+    }
+
+    .timer-display {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timer-ring-container {
+      position: relative;
+      width: 44px;
+      height: 44px;
+    }
+
+    .timer-ring {
+      transform: rotate(-90deg);
+    }
+
+    .timer-seconds {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.95rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-controls {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+    }
+
+    .time-chip {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid var(--card-border);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .time-chip:hover, .time-chip:active {
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .reset-btn {
+      background: #374151;
+      color: var(--danger);
+      border: 1px solid #4b5563;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .reset-storage-wrap {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .clear-data-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .clear-data-btn:hover {
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎯 Archery Fit <span>Pro</span></h1>
+    <p>Zero Compressione Polso • Sbarra &amp; Manubri 7.5kg</p>
+  </header>
+
+  <div class="container">
+    <!-- Day Selection -->
+    <div class="day-selector">
+      <button class="day-btn active" id="btn-day1" onclick="switchDay(1)">Giorno 1: Trazione &amp; Schiena</button>
+      <button class="day-btn" id="btn-day2" onclick="switchDay(2)">Giorno 2: Spalla d'Arco &amp; Stabilità</button>
+    </div>
+
+    <!-- Workout List -->
+    <div id="workout-content"></div>
+
+    <div class="reset-storage-wrap">
+      <button class="clear-data-btn" onclick="clearAllData()">Azzera tutte le spunte della sessione</button>
+    </div>
+  </div>
+
+  <!-- Floating Timer -->
+  <div class="timer-bar">
+    <div class="timer-display">
+      <div class="timer-ring-container">
+        <svg class="timer-ring" width="44" height="44">
+          <circle cx="22" cy="22" r="18" stroke="#334155" stroke-width="3" fill="transparent"/>
+          <circle id="timer-progress" cx="22" cy="22" r="18" stroke="#10b981" stroke-width="3" fill="transparent"
+                  stroke-dasharray="113.1" stroke-dashoffset="0"/>
+        </svg>
+        <span class="timer-seconds" id="timer-text">0s</span>
+      </div>
+      <div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Recupero</div>
+        <div style="font-size: 0.85rem; font-weight: 700;" id="timer-status">Pronto</div>
+      </div>
+    </div>
+
+    <div class="timer-controls">
+      <button class="time-chip" onclick="startTimer(30)">30s</button>
+      <button class="time-chip" onclick="startTimer(60)">60s</button>
+      <button class="time-chip" onclick="startTimer(90)">90s</button>
+      <button class="time-chip" onclick="startTimer(120)">2m</button>
+      <button class="reset-btn" onclick="stopTimer()">✕</button>
+    </div>
+  </div>
+
+  <script>
+    // Audio synthesis for timer beep (no external audio files needed)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(freq = 880, duration = 0.15) {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    const workouts = {
+      1: [
+        {
+          id: "w1_pullups",
+          title: "Trazioni alla Sbarra (o Negative)",
+          target: "Dorsali, Romboidi",
+          wrist: "Presa neutra o prona a uncino (polso perfettamente in asse)",
+          defaultRest: 90,
+          sets: [
+            { rep: "5", load: "Corpo" },
+            { rep: "5", load: "Corpo" },
+            { rep: "5", load: "Corpo" },
+            { rep: "5", load: "Corpo" }
+          ]
+        },
+        {
+          id: "w1_row",
+          title: "Rematore a 1 Braccio con Manubrio",
+          target: "Romboidi & Gran Dorsale",
+          wrist: "Presa a martello; appoggia il gomito, non il palmo a terra",
+          defaultRest: 60,
+          sets: [
+            { rep: "12", load: "7.5 kg" },
+            { rep: "12", load: "7.5 kg" },
+            { rep: "12", load: "7.5 kg" }
+          ]
+        },
+        {
+          id: "w1_ytw",
+          title: "Y-T-W a Terra (Prono)",
+          target: "Depressori & Retrattori Scapolari",
+          wrist: "Pollici al soffitto, dita rilassate, zero carico articolare",
+          defaultRest: 60,
+          sets: [
+            { rep: "8 Y-T-W", load: "Corpo" },
+            { rep: "8 Y-T-W", load: "Corpo" },
+            { rep: "8 Y-T-W", load: "Corpo" }
+          ]
+        },
+        {
+          id: "w1_deadhang",
+          title: "Dead Hang (Sospensione Passiva)",
+          target: "Decompressione Spalle & Grip",
+          wrist: "Trazione pura decompressione; zero carico flessorio",
+          defaultRest: 60,
+          sets: [
+            { rep: "25s", load: "Corpo" },
+            { rep: "25s", load: "Corpo" },
+            { rep: "25s", load: "Corpo" }
+          ]
+        },
+        {
+          id: "w1_deadbug",
+          title: "Dead Bug",
+          target: "Core & Stabilità Pelvica",
+          wrist: "Mani libere in aria, nessun contatto sul carpo",
+          defaultRest: 45,
+          sets: [
+            { rep: "10 per lato", load: "Corpo" },
+            { rep: "10 per lato", load: "Corpo" },
+            { rep: "10 per lato", load: "Corpo" }
+          ]
+        }
+      ],
+      2: [
+        {
+          id: "w2_scappull",
+          title: "Trazioni Scapolari alla Sbarra",
+          target: "Depressori Scapola (Blocco Arco)",
+          wrist: "Braccia distese, gomiti bloccati; muovi solo le scapole",
+          defaultRest: 60,
+          sets: [
+            { rep: "10", load: "Corpo" },
+            { rep: "10", load: "Corpo" },
+            { rep: "10", load: "Corpo" }
+          ]
+        },
+        {
+          id: "w2_reardelt",
+          title: "Alzate Posteriori a 90° con Manubri",
+          target: "Deltoide Posteriore (Tenuta Sgancio)",
+          wrist: "Presa neutra solida, gomiti morbidi ma fissi",
+          defaultRest: 60,
+          sets: [
+            { rep: "12", load: "7.5 kg" },
+            { rep: "12", load: "7.5 kg" },
+            { rep: "12", load: "7.5 kg" }
+          ]
+        },
+        {
+          id: "w2_lunges",
+          title: "Affondi Statici con Manubri",
+          target: "Stabilità Monopodalica & Bacino",
+          wrist: "Braccia penzoloni lungo i fianchi come zavorra",
+          defaultRest: 60,
+          sets: [
+            { rep: "10 per lato", load: "2x7.5 kg" },
+            { rep: "10 per lato", load: "2x7.5 kg" },
+            { rep: "10 per lato", load: "2x7.5 kg" }
+          ]
+        },
+        {
+          id: "w2_wallslides",
+          title: "Scapular Wall Slides al Muro",
+          target: "Dentato Anteriore (Spalla d'Arco)",
+          wrist: "Gomiti e dorso mano sfiorano il muro senza forzare",
+          defaultRest: 60,
+          sets: [
+            { rep: "12", load: "Corpo" },
+            { rep: "12", load: "Corpo" },
+            { rep: "12", load: "Corpo" }
+          ]
+        },
+        {
+          id: "w2_plank",
+          title: "Plank su Avambracci",
+          target: "Core Anti-Estensione",
+          wrist: "Appoggio su gomito e avambraccio, dita distese",
+          defaultRest: 60,
+          sets: [
+            { rep: "45s", load: "Corpo" },
+            { rep: "45s", load: "Corpo" },
+            { rep: "45s", load: "Corpo" }
+          ]
+        }
+      ]
+    };
+
+    let currentDay = 1;
+
+    function renderWorkout(day) {
+      const container = document.getElementById('workout-content');
+      container.innerHTML = '';
+
+      workouts[day].forEach(ex => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        let setsHtml = '';
+        ex.sets.forEach((set, idx) => {
+          const keyDone = `${ex.id}_s${idx}_done`;
+          const keyReps = `${ex.id}_s${idx}_reps`;
+          const keyLoad = `${ex.id}_s${idx}_load`;
+
+          const isDone = localStorage.getItem(keyDone) === 'true';
+          const savedReps = localStorage.getItem(keyReps) || set.rep;
+          const savedLoad = localStorage.getItem(keyLoad) || set.load;
+
+          setsHtml += `
+            <div class="set-row">
+              <span class="set-label">Set ${idx + 1}</span>
+              <input class="input-field" type="text" value="${savedLoad}" 
+                     onchange="localStorage.setItem('${keyLoad}', this.value)" placeholder="Carico">
+              <input class="input-field" type="text" value="${savedReps}" 
+                     onchange="localStorage.setItem('${keyReps}', this.value)" placeholder="Rip">
+              <button class="check-btn ${isDone ? 'completed' : ''}" 
+                      id="btn_${ex.id}_${idx}" 
+                      onclick="toggleSet('${ex.id}', ${idx}, ${ex.defaultRest})">
+                ${isDone ? '✓' : ''}
+              </button>
+            </div>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div>
+              <div class="exercise-title">${ex.title}</div>
+            </div>
+            <span class="target-badge">${ex.target}</span>
+          </div>
+          <div class="wrist-shield">🛡️ Polso: ${ex.wrist}</div>
+          <div class="sets-grid">${setsHtml}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function switchDay(day) {
+      currentDay = day;
+      document.getElementById('btn-day1').classList.toggle('active', day === 1);
+      document.getElementById('btn-day2').classList.toggle('active', day === 2);
+      renderWorkout(day);
+    }
+
+    function toggleSet(exId, setIdx, restSeconds) {
+      const keyDone = `${exId}_s${setIdx}_done`;
+      const btn = document.getElementById(`btn_${exId}_${setIdx}`);
+      const wasDone = localStorage.getItem(keyDone) === 'true';
+
+      if (!wasDone) {
+        localStorage.setItem(keyDone, 'true');
+        btn.classList.add('completed');
+        btn.innerText = '✓';
+        startTimer(restSeconds);
+      } else {
+        localStorage.removeItem(keyDone);
+        btn.classList.remove('completed');
+        btn.innerText = '';
+      }
+    }
+
+    // Timer Logic
+    let timerInterval = null;
+    let totalTime = 0;
+    let remainingTime = 0;
+    const ringCircle = document.getElementById('timer-progress');
+    const circumference = 2 * Math.PI * 18; // r = 18
+
+    function startTimer(seconds) {
+      clearInterval(timerInterval);
+      totalTime = seconds;
+      remainingTime = seconds;
+      document.getElementById('timer-status').innerText = 'In corso...';
+
+      updateTimerUI();
+
+      timerInterval = setInterval(() => {
+        remainingTime--;
+        updateTimerUI();
+
+        if (remainingTime <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById('timer-status').innerText = 'Fatto! Prossima serie';
+          playBeep(880, 0.2);
+          setTimeout(() => playBeep(1200, 0.3), 250);
+          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      remainingTime = 0;
+      updateTimerUI();
+      document.getElementById('timer-status').innerText = 'Fermato';
+    }
+
+    function updateTimerUI() {
+      document.getElementById('timer-text').innerText = `${remainingTime}s`;
+      const offset = totalTime > 0 ? circumference - (remainingTime / totalTime) * circumference : 0;
+      ringCircle.style.strokeDashoffset = offset;
+    }
+
+    function clearAllData() {
+      if (confirm('Vuoi azzerare tutte le serie completate e ricominciare?')) {
+        localStorage.clear();
+        renderWorkout(currentDay);
+        stopTimer();
+      }
+    }
+
+    // Init
+    ringCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+    renderWorkout(1);
+  </script>
+</body>
+</html>
