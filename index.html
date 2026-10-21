@@ -650,3 +650,805 @@
     .time-chip {
       background: #1e293b;
       color: #cbd5e1;
+      border: 1px solid var(--card-border);
+      padding: 6px 9px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .reset-btn {
+      background: #374151;
+      color: var(--danger);
+      border: 1px solid #4b5563;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .clear-data-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid #334155;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎯 Archery <span>Argon</span></h1>
+    <p>Preparazione Atletica Polso-Sicuro &amp; Telemetria Tiro</p>
+  </header>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-workout" onclick="switchMainTab('workout')">
+      💪 Allenamento
+    </button>
+    <button class="nav-tab" id="tab-tiro" onclick="switchMainTab('tiro')">
+      🎯 Registro &amp; Rosata
+    </button>
+  </div>
+
+  <div class="container">
+
+    <!-- SCHEDA 1: WORKOUT -->
+    <div id="view-workout" class="section-view active">
+      <div class="warmup-banner">
+        <strong>🔥 Pre-Attivazione (3 min):</strong> Prima di iniziare esegui 15 circonduzioni lente delle spalle all'indietro e 10 aperture scapolari a braccia tese senza peso.
+      </div>
+
+      <div class="day-selector">
+        <button class="day-btn active" id="btn-day1" onclick="switchDay(1)">Giorno 1: Trazione &amp; Schiena</button>
+        <button class="day-btn" id="btn-day2" onclick="switchDay(2)">Giorno 2: Spalla d'Arco &amp; Core</button>
+      </div>
+
+      <div id="workout-content"></div>
+
+      <button class="clear-data-btn" onclick="clearWorkoutData()">Azzera spunte allenamento</button>
+    </div>
+
+    <!-- SCHEDA 2: REGISTRO TIRO -->
+    <div id="view-tiro" class="section-view">
+      <div class="tiro-header-card">
+        <div class="field-row">
+          <label class="field-label" for="shoot-date">Data:</label>
+          <input type="date" id="shoot-date" class="date-input" onchange="saveShootingData()">
+          <select id="volee-size" class="date-input" style="max-width: 120px;" onchange="saveShootingData(); renderArrows();">
+            <option value="3">Volée da 3</option>
+            <option value="6">Volée da 6</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="shoot-notes">Setup:</label>
+          <input type="text" id="shoot-notes" class="date-input" placeholder="Es. 18m / 25m, targa 40cm, libbraggio..." onchange="saveShootingData()">
+        </div>
+
+        <div class="counter-box">
+          <div>
+            <span class="counter-title">Volume Frecce Totali</span>
+            <div class="counter-number" id="quick-arrow-counter">0</div>
+          </div>
+          <div class="quick-arrow-btns">
+            <button class="quick-btn" onclick="addQuickArrows(1)">+1</button>
+            <button class="quick-btn" onclick="addQuickArrows(3)">+3</button>
+            <button class="quick-btn" onclick="addQuickArrows(6)">+6</button>
+            <button class="quick-btn" style="color:var(--danger);" onclick="addQuickArrows(-1)">-1</button>
+          </div>
+        </div>
+
+        <div class="score-summary">
+          <div class="summary-item">
+            <div class="num" id="stat-total-arrows">0</div>
+            <div class="lbl">A Tabellone</div>
+          </div>
+          <div class="summary-item">
+            <div class="num" id="stat-total-score">0</div>
+            <div class="lbl">Punti</div>
+          </div>
+          <div class="summary-item">
+            <div class="num" id="stat-avg-score">0.00</div>
+            <div class="lbl">Media</div>
+          </div>
+          <div class="summary-item">
+            <div class="num" id="stat-x-count">0</div>
+            <div class="lbl">10 + X (🎯)</div>
+          </div>
+        </div>
+
+        <!-- Analisi Rosata in tempo reale -->
+        <div class="rosata-bar" id="rosata-analysis">
+          <span>Tendenza Rosata: aggiungi frecce per l'analisi</span>
+        </div>
+      </div>
+
+      <div id="arrows-container" class="arrows-list"></div>
+
+      <div class="tiro-actions">
+        <div class="btn-row-2">
+          <button class="add-arrow-btn" onclick="addNewArrow()">
+            ➕ +1 Freccia
+          </button>
+          <button class="add-arrow-btn" onclick="addVoleeArrows()">
+            🏹 +3 Volée
+          </button>
+        </div>
+
+        <button class="save-history-btn" onclick="saveSessionToHistory()">
+          💾 Salva Sessione nello Storico
+        </button>
+
+        <div class="btn-row-2">
+          <button class="export-excel-btn" onclick="exportToExcelCSV(false)">
+            📊 Excel Sessione
+          </button>
+          <button class="export-excel-btn" style="background:#0284c7;" onclick="exportToExcelCSV(true)">
+            📚 Excel Storico Completo
+          </button>
+        </div>
+
+        <button class="clear-data-btn" onclick="resetCurrentSession()">
+          Svuota tabellone corrente
+        </button>
+      </div>
+
+      <!-- Storico Sessioni Salvate -->
+      <div class="history-section">
+        <div class="history-title">
+          <span>📚 Storico Sessioni Salvate</span>
+          <button onclick="clearHistory()" style="background:none;border:none;color:var(--danger);font-size:0.75rem;cursor:pointer;">Cancella storico</button>
+        </div>
+        <div id="history-list"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Barra Timer Recupero -->
+  <div class="timer-bar">
+    <div class="timer-display">
+      <div class="timer-ring-container">
+        <svg class="timer-ring" width="44" height="44">
+          <circle cx="22" cy="22" r="18" stroke="#334155" stroke-width="3" fill="transparent"/>
+          <circle id="timer-progress" cx="22" cy="22" r="18" stroke="#10b981" stroke-width="3" fill="transparent"
+                  stroke-dasharray="113.1" stroke-dashoffset="0"/>
+        </svg>
+        <span class="timer-seconds" id="timer-text">0s</span>
+      </div>
+      <div>
+        <div style="font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase;">Recupero</div>
+        <div style="font-size: 0.84rem; font-weight: 700;" id="timer-status">Pronto</div>
+      </div>
+    </div>
+
+    <div class="timer-controls">
+      <button class="time-chip" onclick="startTimer(45)">45s</button>
+      <button class="time-chip" onclick="startTimer(60)">60s</button>
+      <button class="time-chip" onclick="startTimer(90)">90s</button>
+      <button class="time-chip" onclick="startTimer(120)">2m</button>
+      <button class="reset-btn" onclick="stopTimer()">✕</button>
+    </div>
+  </div>
+
+  <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(freq = 880, duration = 0.18) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function switchMainTab(tab) {
+      document.getElementById('tab-workout').classList.toggle('active', tab === 'workout');
+      document.getElementById('tab-tiro').classList.toggle('active', tab === 'tiro');
+      document.getElementById('view-workout').classList.toggle('active', tab === 'workout');
+      document.getElementById('view-tiro').classList.toggle('active', tab === 'tiro');
+    }
+
+    const workouts = {
+      1: [
+        {
+          id: "w1_pullups",
+          title: "Trazioni alla Sbarra (o Eccentriche 5\")",
+          target: "Gran Dorsale & Romboidi",
+          wrist: "Presa neutra o prona a uncino (polso dritto in asse)",
+          image: "img/trazioni.jpg",
+          instructions: "<strong>Esecuzione Biomeccanica:</strong><br>1. Impugna la sbarra con presa neutra (palmi che si guardano) o prona agganciando con le dita.<br>2. Prima di piegare i gomiti, <strong>deprimi le scapole</strong> (lontane dalle orecchie).<br>3. Tira il petto verso l'alto tenendo il polso monolitico.<br>4. <em>Focus Tiro:</em> Se fai le negative, sali con una sedia e impiega 5 secondi costanti per scendere: simula la gestione della tensione dell'arco.",
+          defaultRest: 90,
+          sets: [
+            { rep: "5", load: "Corpo" },
+            { rep: "5", load: "Corpo" },
+            { rep: "5", load: "Corpo" },
+            { rep: "5", load: "Corpo" }
+          ]
+        },
+        {
+          id: "w1_row",
+          title: "Rematore Monolaterale Manubrio (+ Pausa 2\")",
+          target: "Romboidi & Trapezio Medio",
+          wrist: "Presa a martello; appoggia il gomito libero, MAI il palmo",
+          image: "img/rematore.jpg",
+          instructions: "<strong>Esecuzione Biomeccanica:</strong><br>1. Busto inclinato a 45°-60°, colonna neutra. Appoggia l'avambraccio non allenato su una panca/tavolo (polso libero nel vuoto).<br>2. Tira il manubrio da 7.5 kg portando il gomito verso l'anca come quando apri la corda.<br>3. <strong>Isometria Arciere:</strong> Arrivato in cima, blocca la scapola chiusa per <strong>2 secondi netti</strong> (come nella fase di ancoraggio e mira), poi scendi lentamente.",
+          defaultRest: 60,
+          sets: [
+            { rep: "10-12", load: "7.5 kg" },
+            { rep: "10-12", load: "7.5 kg" },
+            { rep: "10-12", load: "7.5 kg" }
+          ]
+        },
+        {
+          id: "w1_ytw",
+          title: "Y-T-W Prono Isometrico",
+          target: "Trapezio Inferiore & Cuffia",
+          wrist: "Pollici al soffitto, mano scarica, zero compressione",
+          image: "img/ytw.jpg",
+          instructions: "<strong>Esecuzione Biomeccanica:</strong><br>1. A pancia in giù, fronte su un asciugamano.<br>2. <strong>Y (45° avanti):</strong> attiva il trapezio inferiore che tiene bassa la spalla dell'arco.<br>3. <strong>T (90° fuori):</strong> attiva deltoide posteriore e romboidi.<br>4. <strong>W (gomiti stretti):</strong> extrarotazione pura della cuffia.<br>Mantieni 2 secondi di tenuta isometrica a ogni ripetizione.",
+          defaultRest: 60,
+          sets: [
+            { rep: "8 Y-T-W", load: "Corpo" },
+            { rep: "8 Y-T-W", load: "Corpo" },
+            { rep: "8 Y-T-W", load: "Corpo" }
+          ]
+        },
+        {
+          id: "w1_deadhang",
+          title: "Dead Hang (Decompressione Articolare)",
+          target: "Decompressione Spalle & Colonna",
+          wrist: "Trazione assiale; decomprime il carpo anziché schiacciarlo",
+          image: "img/deadhang.jpg",
+          instructions: "<strong>Esecuzione Biomeccanica:</strong><br>1. Appenditi alla sbarra a braccia distese.<br>2. Rilassa completamente il tratto lombare e lascia che il peso del bacino allunghi la schiena.<br>3. Respira profondamente col diaframma per 25-30 secondi.",
+          defaultRest: 60,
+          sets: [
+            { rep: "30s", load: "Corpo" },
+            { rep: "30s", load: "Corpo" },
+            { rep: "30s", load: "Corpo" }
+          ]
+        },
+        {
+          id: "w1_deadbug",
+          title: "Dead Bug (Anti-Inarcamento Lombare)",
+          target: "Core & Stabilità Tiro",
+          wrist: "Mani libere verso il soffitto, zero appoggio",
+          image: "img/deadbug.jpg",
+          instructions: "<strong>Esecuzione Biomeccanica:</strong><br>1. Supino, zona lombare incollata a terra (retroversione del bacino: la stessa postura che devi tenere sulla linea di tiro).<br>2. Estendi lentamente braccio destro indietro e gamba sinistra avanti.<br>3. Espira tutta l'aria mentre distendi gli arti per attivare il trasverso dell'addome.",
+          defaultRest: 45,
+          sets: [
+            { rep: "10/lato", load: "Corpo" },
+            { rep: "10/lato", load: "Corpo" },
+            { rep: "10/lato", load: "Corpo" }
+          ]
+        }
+      ],
+      2: [
+        {
+          id: "w2_scappull",
+          title: "Trazioni Scapolari alla Sbarra",
+          target: "Fissatori Spalla d'Arco",
+          wrist: "Gomiti e polsi bloccati; muovi solo le scapole",
+          image: "img/scapolari.jpg",
+          instructions: "<strong>Esecuzione Biomeccanica:</strong><br>1. Appeso alla sbarra a braccia completamente dritte.<br>2. Senza piegare i gomiti, spingi le spalle lontano dalle orecchie sollevando il corpo di 5-8 cm.<br>3. Tieni la posizione alta per <strong>2 secondi</strong>: insegna al corpo a incastrare la spalla dell'arco nel pre-draw.",
+          defaultRest: 60,
+          sets: [
+            { rep: "10", load: "Corpo" },
+            { rep: "10", load: "Corpo" },
+            { rep: "10", load: "Corpo" }
+          ]
+        },
+        {
+          id: "w2_reardelt",
+          title: "Alzate Posteriori a 90° con Manubri",
+          target: "Deltoide Posteriore (Rilascio & Mira)",
+          wrist: "Presa neutra solida, polso bloccato",
+          image: "img/alzate.jpg",
+          instructions: "<strong>Esecuzione Biomeccanica:</strong><br>1. Busto flesso in avanti quasi parallelo al suolo, schiena piatta.<br>2. Apri le braccia a croce guidando il movimento con i gomiti.<br>3. Rinforza il muscolo esatto che gestisce l'espansione finale (back-tension) e il rilascio pulito della corda.",
+          defaultRest: 60,
+          sets: [
+            { rep: "12", load: "7.5 kg" },
+            { rep: "12", load: "7.5 kg" },
+            { rep: "12", load: "7.5 kg" }
+          ]
+        },
+        {
+          id: "w2_lunges",
+          title: "Affondi Statici Zavorrati",
+          target: "Base Stabile Contro-Vento",
+          wrist: "Braccia a peso morto lungo i fianchi",
+          image: "img/affondi.jpg",
+          instructions: "<strong>Esecuzione Biomeccanica:</strong><br>1. Passo ampio, manubri tenuti lungo i fianchi senza flettere i polsi.<br>2. Scendi fino a 90° con entrambe le ginocchia mantenendo il busto verticale.<br>3. Costruisce stabilità nelle gambe e nelle anche per non oscillare mentre miri.",
+          defaultRest: 60,
+          sets: [
+            { rep: "10/lato", load: "2x7.5 kg" },
+            { rep: "10/lato", load: "2x7.5 kg" },
+            { rep: "10/lato", load: "2x7.5 kg" }
+          ]
+        },
+        {
+          id: "w2_wallslides",
+          title: "Scapular Wall Slides al Muro",
+          target: "Gran Dentato Anteriore",
+          wrist: "Dorso mano sfiora il muro senza pressione",
+          image: "img/wallslides.jpg",
+          instructions: "<strong>Esecuzione Biomeccanica:</strong><br>1. Schiena, glutei e gomiti contro il muro.<br>2. Fai scorrere le braccia da 'W' a 'Y' senza mai staccare la zona lombare dalla parete.<br>3. Fondamentale per stabilizzare la scapola che spinge verso il bersaglio.",
+          defaultRest: 60,
+          sets: [
+            { rep: "12", load: "Corpo" },
+            { rep: "12", load: "Corpo" },
+            { rep: "12", load: "Corpo" }
+          ]
+        },
+        {
+          id: "w2_plank",
+          title: "Plank su Avambracci (Zero Carpo)",
+          target: "Core Isometrico",
+          wrist: "Peso al 100% sui gomiti; mani rilassate",
+          image: "img/plank.jpg",
+          instructions: "<strong>Esecuzione Biomeccanica:</strong><br>1. Appoggia solo gomiti e avambracci a terra.<br>2. Stringi forte i glutei e tira l'ombelico in dentro.<br>3. Allena la tenuta isometrica del tronco identica alla postura di tiro.",
+          defaultRest: 60,
+          sets: [
+            { rep: "45s", load: "Corpo" },
+            { rep: "45s", load: "Corpo" },
+            { rep: "45s", load: "Corpo" }
+          ]
+        }
+      ]
+    };
+
+    let currentDay = 1;
+
+    function toggleGuide(id) {
+      const box = document.getElementById(`guide_${id}`);
+      const btn = document.getElementById(`btn_guide_${id}`);
+      const isShowing = box.classList.toggle('show');
+      btn.innerHTML = isShowing ? '✕ Chiudi spiegazione' : '📖 Come si fa?';
+    }
+
+    function renderWorkout(day) {
+      const container = document.getElementById('workout-content');
+      container.innerHTML = '';
+
+      workouts[day].forEach(ex => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        let setsHtml = '';
+        ex.sets.forEach((set, idx) => {
+          const keyDone = `${ex.id}_s${idx}_done`;
+          const keyReps = `${ex.id}_s${idx}_reps`;
+          const keyLoad = `${ex.id}_s${idx}_load`;
+
+          const isDone = localStorage.getItem(keyDone) === 'true';
+          const savedReps = localStorage.getItem(keyReps) || set.rep;
+          const savedLoad = localStorage.getItem(keyLoad) || set.load;
+
+          setsHtml += `
+            <div class="set-row">
+              <span class="set-label">Set ${idx + 1}</span>
+              <input class="input-field" type="text" value="${savedLoad}" 
+                     onchange="localStorage.setItem('${keyLoad}', this.value)">
+              <input class="input-field" type="text" value="${savedReps}" 
+                     onchange="localStorage.setItem('${keyReps}', this.value)">
+              <button class="check-btn ${isDone ? 'completed' : ''}" 
+                      id="btn_${ex.id}_${idx}" 
+                      onclick="toggleSet('${ex.id}', ${idx}, ${ex.defaultRest})">
+                ${isDone ? '✓' : ''}
+              </button>
+            </div>
+          `;
+        });
+
+        const imageHtml = ex.image ? `
+          <div class="exercise-img-wrap">
+            <img src="${ex.image}" alt="${ex.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
+          </div>
+        ` : '';
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="exercise-title">${ex.title}</div>
+            <span class="target-badge">${ex.target}</span>
+          </div>
+          <div class="wrist-shield">🛡️ Polso: ${ex.wrist}</div>
+          <div>
+            <button class="guide-toggle-btn" id="btn_guide_${ex.id}" onclick="toggleGuide('${ex.id}')">
+              📖 Come si fa?
+            </button>
+          </div>
+          <div class="guide-box" id="guide_${ex.id}">${ex.instructions}</div>
+          ${imageHtml}
+          <div class="sets-grid">${setsHtml}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function switchDay(day) {
+      currentDay = day;
+      document.getElementById('btn-day1').classList.toggle('active', day === 1);
+      document.getElementById('btn-day2').classList.toggle('active', day === 2);
+      renderWorkout(day);
+    }
+
+    function toggleSet(exId, setIdx, restSeconds) {
+      const keyDone = `${exId}_s${setIdx}_done`;
+      const btn = document.getElementById(`btn_${exId}_${setIdx}`);
+      const wasDone = localStorage.getItem(keyDone) === 'true';
+
+      if (!wasDone) {
+        localStorage.setItem(keyDone, 'true');
+        btn.classList.add('completed');
+        btn.innerText = '✓';
+        startTimer(restSeconds);
+      } else {
+        localStorage.removeItem(keyDone);
+        btn.classList.remove('completed');
+        btn.innerText = '';
+      }
+    }
+
+    function clearWorkoutData() {
+      if (confirm('Vuoi azzerare le spunte di completamento dell\'allenamento?')) {
+        Object.keys(localStorage).forEach(k => {
+          if (k.endsWith('_done')) localStorage.removeItem(k);
+        });
+        renderWorkout(currentDay);
+        stopTimer();
+      }
+    }
+
+    // --- TIMER PRECISION TIMESTAMP (FUNZIONA ANCHE A SCHERMO IN STANDBY) ---
+    let timerInterval = null;
+    let totalTime = 0;
+    let endTime = 0;
+    let remainingTime = 0;
+    const ringCircle = document.getElementById('timer-progress');
+    const circumference = 2 * Math.PI * 18;
+
+    async function requestWakeLock() {
+      try {
+        if ('wakeLock' in navigator) await navigator.wakeLock.request('screen');
+      } catch (e) {}
+    }
+
+    function startTimer(seconds) {
+      clearInterval(timerInterval);
+      totalTime = seconds;
+      endTime = Date.now() + seconds * 1000;
+      remainingTime = seconds;
+      document.getElementById('timer-status').innerText = 'Recupero attivo...';
+      requestWakeLock();
+      updateTimerUI();
+
+      timerInterval = setInterval(() => {
+        remainingTime = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+        updateTimerUI();
+
+        if (remainingTime <= 0) {
+          clearInterval(timerInterval);
+          document.getElementById('timer-status').innerText = 'Fatto! Vai col set';
+          playBeep(880, 0.18);
+          setTimeout(() => playBeep(1174, 0.25), 220);
+          if (navigator.vibrate) navigator.vibrate([250, 100, 250]);
+        }
+      }, 250);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      remainingTime = 0;
+      updateTimerUI();
+      document.getElementById('timer-status').innerText = 'Pronto';
+    }
+
+    function updateTimerUI() {
+      document.getElementById('timer-text').innerText = `${remainingTime}s`;
+      const offset = totalTime > 0 ? circumference - (remainingTime / totalTime) * circumference : 0;
+      ringCircle.style.strokeDashoffset = offset;
+    }
+
+    // --- TELEMETRIA TIRO & STORICO ---
+    let arrows = [];
+    let quickShotCount = 0;
+    let sessionsHistory = [];
+
+    function scoreToNumeric(val) {
+      if (val === 'X' || val === '10') return 10;
+      if (val === 'M' || val === '0') return 0;
+      const n = parseInt(val, 10);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function initShootingDate() {
+      const savedDate = localStorage.getItem('archery_shoot_date');
+      const savedNotes = localStorage.getItem('archery_shoot_notes');
+      const savedQuickCount = localStorage.getItem('archery_quick_count');
+      const savedVoleeSize = localStorage.getItem('archery_volee_size');
+
+      document.getElementById('shoot-date').value = savedDate || new Date().toISOString().split('T')[0];
+      if (savedNotes) document.getElementById('shoot-notes').value = savedNotes;
+      if (savedVoleeSize) document.getElementById('volee-size').value = savedVoleeSize;
+
+      quickShotCount = parseInt(savedQuickCount, 10) || 0;
+      document.getElementById('quick-arrow-counter').innerText = quickShotCount;
+
+      try {
+        arrows = JSON.parse(localStorage.getItem('archery_arrows') || '[]');
+      } catch(e) { arrows = []; }
+
+      try {
+        sessionsHistory = JSON.parse(localStorage.getItem('archery_history') || '[]');
+      } catch(e) { sessionsHistory = []; }
+
+      renderArrows();
+      renderHistory();
+    }
+
+    function saveShootingData() {
+      localStorage.setItem('archery_shoot_date', document.getElementById('shoot-date').value);
+      localStorage.setItem('archery_shoot_notes', document.getElementById('shoot-notes').value);
+      localStorage.setItem('archery_volee_size', document.getElementById('volee-size').value);
+      localStorage.setItem('archery_quick_count', quickShotCount);
+      localStorage.setItem('archery_arrows', JSON.stringify(arrows));
+      updateStats();
+    }
+
+    function addQuickArrows(amount) {
+      quickShotCount = Math.max(0, quickShotCount + amount);
+      document.getElementById('quick-arrow-counter').innerText = quickShotCount;
+      saveShootingData();
+    }
+
+    function addNewArrow() {
+      arrows.push({ score: "10", direction: "C" });
+      if (quickShotCount < arrows.length) {
+        quickShotCount = arrows.length;
+        document.getElementById('quick-arrow-counter').innerText = quickShotCount;
+      }
+      saveShootingData();
+      renderArrows();
+    }
+
+    function addVoleeArrows() {
+      const vSize = parseInt(document.getElementById('volee-size').value, 10) || 3;
+      for (let i = 0; i < vSize; i++) {
+        arrows.push({ score: "9", direction: "C" });
+      }
+      if (quickShotCount < arrows.length) {
+        quickShotCount = arrows.length;
+        document.getElementById('quick-arrow-counter').innerText = quickShotCount;
+      }
+      saveShootingData();
+      renderArrows();
+    }
+
+    function deleteArrow(index) {
+      arrows.splice(index, 1);
+      saveShootingData();
+      renderArrows();
+    }
+
+    function updateScore(index, val) {
+      arrows[index].score = val;
+      saveShootingData();
+      renderArrows();
+    }
+
+    function toggleDirection(index, dir) {
+      arrows[index].direction = (arrows[index].direction === dir) ? "C" : dir;
+      saveShootingData();
+      renderArrows();
+    }
+
+    function renderArrows() {
+      const container = document.getElementById('arrows-container');
+      container.innerHTML = '';
+      const vSize = parseInt(document.getElementById('volee-size').value, 10) || 3;
+
+      const scoresList = ["X", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "M"];
+
+      arrows.forEach((arr, idx) => {
+        if (idx % vSize === 0) {
+          const vNum = Math.floor(idx / vSize) + 1;
+          let vSum = 0;
+          for (let k = idx; k < Math.min(idx + vSize, arrows.length); k++) {
+            vSum += scoreToNumeric(arrows[k].score);
+          }
+          const div = document.createElement('div');
+          div.className = 'volee-divider';
+          div.innerHTML = `<span>Volée ${vNum}</span><span>Parziale: ${vSum} pt</span>`;
+          container.appendChild(div);
+        }
+
+        const item = document.createElement('div');
+        item.className = 'arrow-card';
+
+        const optionsHtml = scoresList.map(s => {
+          const label = s === 'M' ? 'M (0)' : s;
+          return `<option value="${s}" ${arr.score === s ? 'selected' : ''}>${label}</option>`;
+        }).join('');
+
+        item.innerHTML = `
+          <div class="arrow-num">#${idx + 1}</div>
+          <select class="score-select" onchange="updateScore(${idx}, this.value)">
+            ${optionsHtml}
+          </select>
+          <div class="dir-cluster">
+            <button class="dir-btn ${arr.direction === 'U' ? 'active' : ''}" onclick="toggleDirection(${idx}, 'U')">▲</button>
+            <button class="dir-btn ${arr.direction === 'L' ? 'active' : ''}" onclick="toggleDirection(${idx}, 'L')">◀</button>
+            <button class="dir-btn ${arr.direction === 'C' ? 'active' : ''}" onclick="toggleDirection(${idx}, 'C')">🎯</button>
+            <button class="dir-btn ${arr.direction === 'R' ? 'active' : ''}" onclick="toggleDirection(${idx}, 'R')">▶</button>
+            <button class="dir-btn ${arr.direction === 'D' ? 'active' : ''}" onclick="toggleDirection(${idx}, 'D')">▼</button>
+          </div>
+          <button class="del-arrow-btn" onclick="deleteArrow(${idx})">✕</button>
+        `;
+        container.appendChild(item);
+      });
+
+      updateStats();
+    }
+
+    function updateStats() {
+      const totalArrows = arrows.length;
+      let totalScore = 0;
+      let goldCount = 0;
+      const dirs = { U: 0, D: 0, L: 0, R: 0, C: 0 };
+
+      arrows.forEach(a => {
+        totalScore += scoreToNumeric(a.score);
+        if (a.score === 'X' || a.score === '10') goldCount++;
+        if (dirs[a.direction] !== undefined) dirs[a.direction]++;
+      });
+
+      const avg = totalArrows > 0 ? (totalScore / totalArrows).toFixed(2) : "0.00";
+
+      document.getElementById('stat-total-arrows').innerText = totalArrows;
+      document.getElementById('stat-total-score').innerText = totalScore;
+      document.getElementById('stat-avg-score').innerText = avg;
+      document.getElementById('stat-x-count').innerText = goldCount;
+
+      const rosataEl = document.getElementById('rosata-analysis');
+      if (totalArrows === 0) {
+        rosataEl.innerHTML = `<span>🎯 Tendenza Rosata: inserisci i tiri per calcolare le deviazioni</span>`;
+      } else {
+        rosataEl.innerHTML = `
+          <span>🎯 Centro: <b style="color:#10b981">${dirs.C}</b></span>
+          <span class="rosata-pill">▲ Alto: ${dirs.U}</span>
+          <span class="rosata-pill">▼ Basso: ${dirs.D}</span>
+          <span class="rosata-pill">◀ Sx: ${dirs.L}</span>
+          <span class="rosata-pill">▶ Dx: ${dirs.R}</span>
+        `;
+      }
+    }
+
+    function saveSessionToHistory() {
+      if (arrows.length === 0 && quickShotCount === 0) {
+        alert("Inserisci almeno una freccia prima di salvare nello storico.");
+        return;
+      }
+      const date = document.getElementById('shoot-date').value || new Date().toISOString().split('T')[0];
+      const notes = document.getElementById('shoot-notes').value || "";
+      const totalScore = arrows.reduce((acc, a) => acc + scoreToNumeric(a.score), 0);
+      const avg = arrows.length > 0 ? (totalScore / arrows.length).toFixed(2) : "0.00";
+
+      sessionsHistory.unshift({
+        id: Date.now(),
+        date,
+        notes,
+        quickShotCount,
+        scoredArrows: arrows.length,
+        totalScore,
+        avg,
+        arrows: [...arrows]
+      });
+
+      localStorage.setItem('archery_history', JSON.stringify(sessionsHistory));
+      renderHistory();
+      alert("Sessione salvata nello storico!");
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('history-list');
+      if (sessionsHistory.length === 0) {
+        list.innerHTML = `<div style="font-size:0.8rem;color:var(--text-muted);">Nessuna sessione archiviata.</div>`;
+        return;
+      }
+      list.innerHTML = sessionsHistory.map(s => `
+        <div class="history-card">
+          <div>
+            <strong style="color:#fff;">📅 ${s.date}</strong> — <span style="color:var(--accent);font-weight:700;">${s.totalScore} pt</span> (Media: ${s.avg})<br>
+            <span style="color:var(--text-muted);font-size:0.75rem;">Frecce totali: ${s.quickShotCount} | Tabellone: ${s.scoredArrows} ${s.notes ? '• ' + s.notes : ''}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function clearHistory() {
+      if (confirm('Vuoi cancellare definitivamente lo storico delle sessioni salvate?')) {
+        sessionsHistory = [];
+        localStorage.removeItem('archery_history');
+        renderHistory();
+      }
+    }
+
+    function resetCurrentSession() {
+      if (confirm('Svuotare il tabellone della sessione corrente?')) {
+        arrows = [];
+        quickShotCount = 0;
+        document.getElementById('quick-arrow-counter').innerText = '0';
+        saveShootingData();
+        renderArrows();
+      }
+    }
+
+    function exportToExcelCSV(exportAllHistory) {
+      const dirMap = { 'U': 'Sopra (Alto)', 'D': 'Sotto (Basso)', 'L': 'Sinistra', 'R': 'Destra', 'C': 'Centro' };
+      let csvContent = "\uFEFF";
+      csvContent += "Data;Volée;Numero Freccia;Punteggio;Valore Numerico;Deviazione;Note Sessione\r\n";
+
+      const vSize = parseInt(document.getElementById('volee-size').value, 10) || 3;
+
+      if (exportAllHistory) {
+        if (sessionsHistory.length === 0) {
+          alert("Lo storico è vuoto. Salva prima una sessione con il pulsante viola.");
+          return;
+        }
+        sessionsHistory.forEach(sess => {
+          const cleanNotes = (sess.notes || "").replace(/"/g, '""');
+          sess.arrows.forEach((arr, idx) => {
+            const vNum = Math.floor(idx / vSize) + 1;
+            const numVal = scoreToNumeric(arr.score);
+            csvContent += `"${sess.date}";${vNum};${idx + 1};"${arr.score}";${numVal};"${dirMap[arr.direction] || 'Centro'}";"${cleanNotes}"\r\n`;
+          });
+        });
+      } else {
+        if (arrows.length === 0 && quickShotCount === 0) {
+          alert("Nessun tiro registrato nella sessione attuale.");
+          return;
+        }
+        const date = document.getElementById('shoot-date').value || new Date().toISOString().split('T')[0];
+        const notes = (document.getElementById('shoot-notes').value || "").replace(/"/g, '""');
+
+        arrows.forEach((arr, idx) => {
+          const vNum = Math.floor(idx / vSize) + 1;
+          const numVal = scoreToNumeric(arr.score);
+          csvContent += `"${date}";${vNum};${idx + 1};"${arr.score}";${numVal};"${dirMap[arr.direction] || 'Centro'}";"${cleanNotes}"\r\n`;
+        });
+
+        let sum = arrows.reduce((acc, a) => acc + scoreToNumeric(a.score), 0);
+        let avg = arrows.length > 0 ? (sum / arrows.length).toFixed(2).replace('.', ',') : "0,00";
+        csvContent += `\r\n"FRECCE TOTALI CONTATE";${quickShotCount};"";"";"";"";""\r\n`;
+        csvContent += `"TOTALE PUNTI";${sum};"";"";"";"";""\r\n`;
+        csvContent += `"MEDIA FRECCIA";"${avg}";"";"";"";"";""\r\n`;
+      }
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", exportAllHistory ? `storico_tiro_arco.csv` : `sessione_tiro_arco.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    ringCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+    renderWorkout(1);
+    initShootingDate();
+  </script>
+</body>
+</html>
