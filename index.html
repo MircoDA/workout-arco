@@ -147,7 +147,7 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .exercise-title {
@@ -157,7 +157,7 @@
     }
 
     .target-badge {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       background: #334155;
       color: #cbd5e1;
       padding: 3px 8px;
@@ -174,6 +174,47 @@
       color: var(--amber);
       font-weight: 600;
       margin-bottom: 10px;
+    }
+
+    .guide-toggle-btn {
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: #38bdf8;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+      transition: all 0.15s ease;
+    }
+
+    .guide-toggle-btn:hover {
+      background: #0f172a;
+      border-color: #38bdf8;
+    }
+
+    .guide-box {
+      display: none;
+      background: #0b1324;
+      border-left: 3px solid #38bdf8;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #cbd5e1;
+    }
+
+    .guide-box.show {
+      display: block;
+    }
+
+    .guide-box strong {
+      color: #fff;
     }
 
     .exercise-img-wrap {
@@ -249,7 +290,7 @@
       box-shadow: 0 0 10px var(--accent-glow);
     }
 
-    /* TIRO / LOGGING STYLES */
+    /* SEZIONE TIRO CON L'ARCO */
     .tiro-header-card {
       background: #1e293b;
       border: 1px solid var(--card-border);
@@ -282,7 +323,6 @@
       flex: 1;
     }
 
-    /* Contatore Rapido Frecce */
     .counter-box {
       background: #0f172a;
       border: 1px solid var(--card-border);
@@ -488,7 +528,7 @@
       transform: scale(0.98);
     }
 
-    /* Floating Timer Bar */
+    /* TIMER FLUTTUANTE */
     .timer-bar {
       position: fixed;
       bottom: 0;
@@ -594,7 +634,6 @@
     <p>Workout Senza Compressione &amp; Registro Tiri</p>
   </header>
 
-  <!-- Top View Navigation -->
   <div class="nav-tabs">
     <button class="nav-tab active" id="tab-workout" onclick="switchMainTab('workout')">
       💪 Allenamento
@@ -606,7 +645,7 @@
 
   <div class="container">
 
-    <!-- VIEW 1: WORKOUT -->
+    <!-- SCHEDA 1: WORKOUT -->
     <div id="view-workout" class="section-view active">
       <div class="day-selector">
         <button class="day-btn active" id="btn-day1" onclick="switchDay(1)">Giorno 1: Trazione &amp; Schiena</button>
@@ -620,7 +659,7 @@
       </div>
     </div>
 
-    <!-- VIEW 2: REGISTRO TIRO -->
+    <!-- SCHEDA 2: REGISTRO TIRO -->
     <div id="view-tiro" class="section-view">
       <div class="tiro-header-card">
         <div class="field-row">
@@ -632,7 +671,6 @@
           <input type="text" id="shoot-notes" class="date-input" placeholder="Es. 18m, targa 40cm, sensazioni..." onchange="saveShootingData()">
         </div>
 
-        <!-- CONTATORE VELOCE FRECCE TIRATE -->
         <div class="counter-box">
           <div class="counter-display">
             <span class="counter-title">Frecce Scoccate</span>
@@ -646,7 +684,6 @@
           </div>
         </div>
 
-        <!-- RIEPILOGO PUNTI -->
         <div class="score-summary">
           <div class="summary-item">
             <div class="num" id="stat-total-arrows">0</div>
@@ -667,10 +704,8 @@
         </div>
       </div>
 
-      <!-- Arrow list -->
       <div id="arrows-container" class="arrows-list"></div>
 
-      <!-- Actions -->
       <div class="tiro-actions">
         <button class="add-arrow-btn" onclick="addNewArrow()">
           ➕ Aggiungi Freccia con Punteggio
@@ -686,7 +721,6 @@
 
   </div>
 
-  <!-- Floating Timer -->
   <div class="timer-bar">
     <div class="timer-display">
       <div class="timer-ring-container">
@@ -713,7 +747,6 @@
   </div>
 
   <script>
-    // Sintesi audio per il timer (funziona offline senza file esterni)
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playBeep(freq = 880, duration = 0.15) {
       if (audioCtx.state === 'suspended') {
@@ -731,7 +764,6 @@
       osc.stop(audioCtx.currentTime + duration);
     }
 
-    // Navigazione schede principali
     function switchMainTab(tab) {
       document.getElementById('tab-workout').classList.toggle('active', tab === 'workout');
       document.getElementById('tab-tiro').classList.toggle('active', tab === 'tiro');
@@ -739,7 +771,6 @@
       document.getElementById('view-tiro').classList.toggle('active', tab === 'tiro');
     }
 
-    // --- DATI ESERCIZI WORKOUT ---
     const workouts = {
       1: [
         {
@@ -748,6 +779,7 @@
           target: "Dorsali, Romboidi",
           wrist: "Presa neutra o prona a uncino (polso perfettamente in asse)",
           image: "img/trazioni.jpg",
+          instructions: "<strong>Come farlo:</strong><br>1. Afferra la sbarra con presa neutra (palmi che si guardano) o presa prona con le dita a uncino.<br>2. <em>Non piegare il polso:</em> mantienilo dritto in linea con l'avambraccio.<br>3. Tira il petto verso la sbarra portando i gomiti verso il basso e indietro, stringendo forte le scapole.<br>4. <em>Se non riesci a salire:</em> sali con un balzo o con una sedia e scendi lentamente controllando la discesa per 4-5 secondi (ripetizione negativa).",
           defaultRest: 90,
           sets: [
             { rep: "5", load: "Corpo" },
@@ -762,6 +794,7 @@
           target: "Romboidi & Gran Dorsale",
           wrist: "Presa a martello; appoggia il gomito, non il palmo a terra",
           image: "img/rematore.jpg",
+          instructions: "<strong>Come farlo:</strong><br>1. In piedi o a ginocchia leggermente flesse, inclina il busto in avanti a 45°-60° con la schiena dritta.<br>2. Appoggia l'avambraccio/gomito libero su una sedia o tavolo (NON appoggiare il palmo aperto per non comprimere il polso).<br>3. Con l'altra mano afferra il manubrio da 7.5 kg con presa a martello (palmo verso il corpo).<br>4. Tira indietro il gomito facendolo scorrere radente al fianco, pensando a portare indietro la scapola. Trattieni 1 secondo in cima e scendi lentamente.",
           defaultRest: 60,
           sets: [
             { rep: "12", load: "7.5 kg" },
@@ -775,6 +808,7 @@
           target: "Depressori & Retrattori Scapolari",
           wrist: "Pollici al soffitto, dita rilassate, zero carico articolare",
           image: "img/ytw.jpg",
+          instructions: "<strong>Come farlo:</strong><br>1. Sdraiati a pancia in giù sul tappetino con la fronte appoggiata (collo rilassato).<br>2. <strong>Y:</strong> Braccia a 45° verso l'alto con i pollici rivolti al soffitto. Solleva le braccia stringendo le scapole verso il basso.<br>3. <strong>T:</strong> Braccia aperte a 90° a croce, pollici al soffitto. Solleva stringendo le scapole al centro.<br>4. <strong>W:</strong> Piega i gomiti verso i fianchi a forma di W e solleva gli avambracci.<br><em>Esegui 8 ripetizioni per ciascuna posizione fermandoti 2 secondi in cima.</em>",
           defaultRest: 60,
           sets: [
             { rep: "8 Y-T-W", load: "Corpo" },
@@ -788,6 +822,7 @@
           target: "Decompressione Spalle & Grip",
           wrist: "Trazione pura decompressione; zero carico flessorio",
           image: "img/deadhang.jpg",
+          instructions: "<strong>Come farlo:</strong><br>1. Afferra saldamente la sbarra per trazioni con le mani alla larghezza delle spalle.<br>2. Stacca i piedi da terra e lasciati semplicemente appendere a braccia completamente distese.<br>3. Rilassa le spalle, la schiena e le gambe lasciando che la forza di gravità allunghi la colonna vertebrale e apra le articolazioni delle spalle.<br>4. Respira con calma e mantieni la posizione per 20-30 secondi.",
           defaultRest: 60,
           sets: [
             { rep: "25s", load: "Corpo" },
@@ -801,6 +836,7 @@
           target: "Core & Stabilità Pelvica",
           wrist: "Mani libere in aria, nessun contatto sul carpo",
           image: "img/deadbug.jpg",
+          instructions: "<strong>Come farlo:</strong><br>1. Sdraiati supino sulla schiena: braccia tese verso il soffitto e ginocchia piegate a 90° a tavolino.<br>2. <em>Regola fondamentale:</em> Schiaccia forte la parte bassa della schiena contro il pavimento (non deve passare aria).<br>3. Lentamente distendi all'indietro il braccio destro mentre allunghi in avanti la gamba sinistra sfiorando il pavimento.<br>4. Torna al centro e ripeti con braccio sinistro e gamba destra. Polsi completamente liberi da sforzi.",
           defaultRest: 45,
           sets: [
             { rep: "10 per lato", load: "Corpo" },
@@ -816,6 +852,7 @@
           target: "Depressori Scapola (Blocco Arco)",
           wrist: "Braccia distese, gomiti bloccati; muovi solo le scapole",
           image: "img/scapolari.jpg",
+          instructions: "<strong>Come farlo:</strong><br>1. Appenditi alla sbarra con le braccia completamente tese e i gomiti bloccati.<br>2. Senza piegare minimamente le braccia, tira le spalle verso il basso spingendo il petto leggermente verso l'alto (depressione scapolare).<br>3. Il corpo si solleverà di soli 5-8 cm grazie al solo movimento delle scapole.<br>4. Trattieni la contrazione per 1-2 secondi e torna lentamente nella sospensione passiva. Fondamentale per bloccare la spalla d'arco.",
           defaultRest: 60,
           sets: [
             { rep: "10", load: "Corpo" },
@@ -829,6 +866,7 @@
           target: "Deltoide Posteriore (Tenuta Sgancio)",
           wrist: "Presa neutra solida, gomiti morbidi ma fissi",
           image: "img/alzate.jpg",
+          instructions: "<strong>Come farlo:</strong><br>1. In piedi, piedi alla larghezza delle spalle. Piega le ginocchia e fletti il busto in avanti quasi parallelo a terra (schiena dritta come un tavolo).<br>2. Tieni i manubri da 7.5 kg pendenti con i palmi rivolti uno verso l'altro (presa neutra).<br>3. Mantenendo i gomiti leggermente piegati ma bloccati, apri le braccia verso l'esterno a croce fino all'altezza delle spalle.<br>4. Stringi forte la parte alta della schiena e i deltoidi posteriori, poi controlla la discesa in 2 secondi.",
           defaultRest: 60,
           sets: [
             { rep: "12", load: "7.5 kg" },
@@ -842,6 +880,7 @@
           target: "Stabilità Monopodalica & Bacino",
           wrist: "Braccia lungo i fianchi come zavorra",
           image: "img/affondi.jpg",
+          instructions: "<strong>Come farlo:</strong><br>1. Fai un passo lungo in avanti. Tieni i due manubri da 7.5 kg distesi lungo i fianchi (braccia a peso morto, polsi rilassati dritti).<br>2. Scendi verso il basso piegando entrambe le gambe fino a formare un angolo di 90° con entrambe le ginocchia (il ginocchio dietro sfiora il pavimento).<br>3. Busto perfettamente dritto e verticale (aiuta l'equilibrio della linea di tiro).<br>4. Spingi con il tallone anteriore per risalire. Esegui tutte le ripetizioni su una gamba prima di cambiare.",
           defaultRest: 60,
           sets: [
             { rep: "10 per lato", load: "2x7.5 kg" },
@@ -855,6 +894,7 @@
           target: "Dentato Anteriore (Spalla d'Arco)",
           wrist: "Gomiti e dorso mano sfiorano il muro senza forzare",
           image: "img/wallslides.jpg",
+          instructions: "<strong>Come farlo:</strong><br>1. Mettiti in piedi con la schiena appoggiata al muro. Fletti leggermente le ginocchia per tenere tutta la colonna lombare a contatto col muro.<br>2. Appoggia i gomiti e il dorso delle mani alla parete formando una 'W' con le braccia.<br>3. Facendo scivolare gomiti e mani lungo il muro, spingi le braccia verso l'alto a formare una 'Y', senza mai staccare la schiena né i gomiti.<br>4. Ritorna lentamente in basso. Rinforza il dentato anteriore, il muscolo chiave che impedisce alla spalla dell'arco di alzarsi mentre miri.",
           defaultRest: 60,
           sets: [
             { rep: "12", load: "Corpo" },
@@ -868,6 +908,7 @@
           target: "Core Anti-Estensione",
           wrist: "Appoggio su gomito e avambraccio, dita distese",
           image: "img/plank.jpg",
+          instructions: "<strong>Come farlo:</strong><br>1. Posizionati prono sul tappetino appoggiando <strong>solo gomiti e avambracci</strong> (gomiti perpendicolari sotto le spalle).<br>2. Mani rilassate aperte o a pugno morbido: ZERO pressione sulle articolazioni del carpo.<br>3. Solleva il bacino puntando i piedi: il corpo deve formare una linea retta perfetta dalla testa ai talloni.<br>4. Contrai addome e glutei senza mai inarcare la schiena in basso. Mantieni la posizione respirando regolarmente.",
           defaultRest: 60,
           sets: [
             { rep: "45s", load: "Corpo" },
@@ -879,6 +920,18 @@
     };
 
     let currentDay = 1;
+
+    function toggleGuide(id) {
+      const box = document.getElementById(`guide_${id}`);
+      const btn = document.getElementById(`btn_guide_${id}`);
+      if (box.classList.contains('show')) {
+        box.classList.remove('show');
+        btn.innerHTML = '📖 Come si fa?';
+      } else {
+        box.classList.add('show');
+        btn.innerHTML = '✕ Chiudi spiegazione';
+      }
+    }
 
     function renderWorkout(day) {
       const container = document.getElementById('workout-content');
@@ -928,6 +981,17 @@
             <span class="target-badge">${ex.target}</span>
           </div>
           <div class="wrist-shield">🛡️ Polso: ${ex.wrist}</div>
+
+          <div>
+            <button class="guide-toggle-btn" id="btn_guide_${ex.id}" onclick="toggleGuide('${ex.id}')">
+              📖 Come si fa?
+            </button>
+          </div>
+
+          <div class="guide-box" id="guide_${ex.id}">
+            ${ex.instructions}
+          </div>
+
           ${imageHtml}
           <div class="sets-grid">${setsHtml}</div>
         `;
@@ -969,7 +1033,6 @@
       }
     }
 
-    // --- GESTIONE TIMER RECUPERO ---
     let timerInterval = null;
     let totalTime = 0;
     let remainingTime = 0;
@@ -1010,7 +1073,6 @@
       ringCircle.style.strokeDashoffset = offset;
     }
 
-    // --- REGISTRO E CONTATORE TIRO ---
     let arrows = [];
     let quickShotCount = 0;
 
@@ -1056,9 +1118,8 @@
     function addNewArrow() {
       arrows.push({
         score: "10",
-        direction: "C" // C = Centro, U = Sopra, D = Sotto, L = Sinistra, R = Destra
+        direction: "C"
       });
-      // Sincronizza anche il contatore rapido se inferiore
       if (quickShotCount < arrows.length) {
         quickShotCount = arrows.length;
         document.getElementById('quick-arrow-counter').innerText = quickShotCount;
@@ -1160,7 +1221,6 @@
       }
     }
 
-    // ESPORTAZIONE EXCEL (.CSV)
     function exportToExcelCSV() {
       if (arrows.length === 0 && quickShotCount === 0) {
         alert("Nessun tiro registrato da esportare.");
@@ -1178,7 +1238,6 @@
         'C': 'Centro'
       };
 
-      // Header UTF-8 BOM e delimitatore ';' per Excel in italiano
       let csvContent = "\uFEFF";
       csvContent += "Data;Numero Freccia;Punteggio;Deviazione;Note Sessione\r\n";
 
@@ -1205,7 +1264,6 @@
       document.body.removeChild(link);
     }
 
-    // Inizializzazione pagina
     ringCircle.style.strokeDasharray = `${circumference} ${circumference}`;
     renderWorkout(1);
     initShootingDate();
