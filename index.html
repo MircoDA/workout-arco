@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Tiro con l'Arco | Workout & Registro Tiri</title>
+  <title>Archery Pro Argon | Workout & Telemetria Tiro</title>
   <style>
     :root {
-      --bg: #0f172a;
+      --bg: #0b1120;
       --card-bg: #1e293b;
       --card-border: #334155;
       --accent: #10b981;
       --accent-glow: rgba(16, 185, 129, 0.25);
       --amber: #f59e0b;
       --blue: #3b82f6;
+      --purple: #8b5cf6;
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --danger: #ef4444;
@@ -30,21 +31,22 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding-bottom: 120px;
+      padding-bottom: 130px;
     }
 
     header {
-      background: #111827;
-      padding: 16px;
+      background: rgba(17, 24, 39, 0.95);
+      backdrop-filter: blur(8px);
+      padding: 14px 16px;
       border-bottom: 1px solid var(--card-border);
       text-align: center;
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 30;
     }
 
     header h1 {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       display: flex;
@@ -53,13 +55,19 @@
       gap: 8px;
     }
 
+    header h1 span {
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
     header p {
-      font-size: 0.8rem;
-      color: var(--accent);
-      margin-top: 4px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 3px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
     }
 
     .nav-tabs {
@@ -68,15 +76,18 @@
       border-bottom: 1px solid var(--card-border);
       max-width: 680px;
       margin: 0 auto;
+      position: sticky;
+      top: 63px;
+      z-index: 25;
     }
 
     .nav-tab {
       flex: 1;
-      padding: 14px 10px;
+      padding: 13px 8px;
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
@@ -90,7 +101,7 @@
     .nav-tab.active {
       color: var(--accent);
       border-bottom-color: var(--accent);
-      background: rgba(16, 185, 129, 0.05);
+      background: rgba(16, 185, 129, 0.06);
     }
 
     .container {
@@ -107,12 +118,24 @@
       display: block;
     }
 
+    /* Banner Riscaldamento */
+    .warmup-banner {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      font-size: 0.8rem;
+      color: #fde68a;
+      line-height: 1.4;
+    }
+
     .day-selector {
       display: flex;
       background: #111827;
       padding: 4px;
       border-radius: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       border: 1px solid var(--card-border);
     }
 
@@ -122,7 +145,7 @@
       border: none;
       background: transparent;
       color: var(--text-muted);
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-weight: 700;
       border-radius: 8px;
       cursor: pointer;
@@ -157,7 +180,7 @@
     }
 
     .target-badge {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       background: #334155;
       color: #cbd5e1;
       padding: 3px 8px;
@@ -177,7 +200,7 @@
     }
 
     .guide-toggle-btn {
-      background: #1e293b;
+      background: #0f172a;
       border: 1px solid #475569;
       color: #38bdf8;
       padding: 6px 12px;
@@ -189,12 +212,6 @@
       align-items: center;
       gap: 6px;
       margin-bottom: 12px;
-      transition: all 0.15s ease;
-    }
-
-    .guide-toggle-btn:hover {
-      background: #0f172a;
-      border-color: #38bdf8;
     }
 
     .guide-box {
@@ -204,7 +221,7 @@
       border-radius: 0 8px 8px 0;
       padding: 12px 14px;
       margin-bottom: 14px;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       line-height: 1.5;
       color: #cbd5e1;
     }
@@ -239,7 +256,7 @@
 
     .set-row {
       display: grid;
-      grid-template-columns: 50px 1fr 1fr 60px;
+      grid-template-columns: 52px 1fr 1fr 56px;
       gap: 8px;
       align-items: center;
       background: #0f172a;
@@ -263,11 +280,6 @@
       font-size: 0.85rem;
       font-weight: 600;
       width: 100%;
-    }
-
-    .input-field:focus {
-      outline: none;
-      border-color: var(--accent);
     }
 
     .check-btn {
@@ -303,23 +315,23 @@
       display: flex;
       gap: 10px;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .field-label {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
       font-weight: 600;
-      min-width: 60px;
+      min-width: 65px;
     }
 
     .date-input {
       background: #0f172a;
       border: 1px solid var(--card-border);
       color: #fff;
-      padding: 8px 12px;
+      padding: 8px 10px;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       flex: 1;
     }
 
@@ -328,28 +340,22 @@
       border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
     }
 
-    .counter-display {
-      display: flex;
-      flex-direction: column;
-    }
-
     .counter-title {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       text-transform: uppercase;
       font-weight: 700;
-      letter-spacing: 0.05em;
     }
 
     .counter-number {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       font-weight: 800;
       color: var(--accent);
       line-height: 1.1;
@@ -357,23 +363,22 @@
 
     .quick-arrow-btns {
       display: flex;
-      gap: 6px;
+      gap: 5px;
+      flex-wrap: wrap;
     }
 
     .quick-btn {
       background: #1e293b;
       border: 1px solid var(--card-border);
       color: #fff;
-      padding: 8px 12px;
+      padding: 8px 10px;
       border-radius: 8px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.15s ease;
     }
 
     .quick-btn:active {
-      transform: scale(0.95);
       background: var(--accent);
       color: #064e3b;
     }
@@ -383,22 +388,56 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
       background: #0f172a;
-      padding: 12px;
+      padding: 10px;
       border-radius: 10px;
       text-align: center;
+      margin-bottom: 12px;
     }
 
     .summary-item .num {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: var(--accent);
     }
 
     .summary-item .lbl {
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       color: var(--text-muted);
       text-transform: uppercase;
       font-weight: 600;
+    }
+
+    /* Analisi Rosata (Tendenza direzionale) */
+    .rosata-bar {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .rosata-pill {
+      background: #1e293b;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .volee-divider {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #38bdf8;
+      margin: 12px 0 4px 4px;
+      display: flex;
+      justify-content: space-between;
     }
 
     .arrows-list {
@@ -410,19 +449,19 @@
 
     .arrow-card {
       display: grid;
-      grid-template-columns: 36px 90px 1fr 34px;
-      gap: 8px;
+      grid-template-columns: 34px 86px 1fr 30px;
+      gap: 6px;
       align-items: center;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 12px;
-      padding: 10px;
+      padding: 9px 10px;
     }
 
     .arrow-num {
       font-weight: 800;
       color: var(--text-muted);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       text-align: center;
     }
 
@@ -430,9 +469,9 @@
       background: #0f172a;
       color: #fff;
       border: 1px solid var(--card-border);
-      padding: 8px 4px;
+      padding: 7px 4px;
       border-radius: 8px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 700;
       text-align: center;
     }
@@ -450,12 +489,11 @@
       width: 30px;
       height: 30px;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.15s;
     }
 
     .dir-btn.active {
@@ -469,75 +507,107 @@
       background: transparent;
       color: #64748b;
       border: none;
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .del-arrow-btn:hover {
-      color: var(--danger);
     }
 
     .tiro-actions {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-top: 16px;
+      margin-top: 14px;
+    }
+
+    .btn-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
     }
 
     .add-arrow-btn {
       background: #111827;
       border: 2px dashed var(--accent);
       color: var(--accent);
-      padding: 14px;
+      padding: 13px;
       border-radius: 12px;
-      font-size: 1rem;
+      font-size: 0.92rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      transition: all 0.2s;
+      gap: 6px;
     }
 
-    .add-arrow-btn:active {
-      transform: scale(0.98);
-      background: rgba(16, 185, 129, 0.1);
+    .save-history-btn {
+      background: var(--purple);
+      color: #fff;
+      border: none;
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .export-excel-btn {
       background: #16a34a;
       color: #fff;
       border: none;
-      padding: 14px;
+      padding: 13px;
       border-radius: 12px;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.3);
+      gap: 6px;
     }
 
-    .export-excel-btn:active {
-      transform: scale(0.98);
+    /* Storico Sessioni */
+    .history-section {
+      margin-top: 28px;
+      border-top: 1px solid var(--card-border);
+      padding-top: 18px;
     }
 
-    /* TIMER FLUTTUANTE */
+    .history-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .history-card {
+      background: #111827;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+    }
+
+    /* Timer Fluttuante */
     .timer-bar {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(17, 24, 39, 0.95);
+      background: rgba(15, 23, 42, 0.96);
       backdrop-filter: blur(10px);
       border-top: 1px solid var(--card-border);
-      padding: 12px 16px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -549,7 +619,7 @@
     .timer-display {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .timer-ring-container {
@@ -567,706 +637,16 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 800;
       font-variant-numeric: tabular-nums;
     }
 
     .timer-controls {
       display: flex;
-      gap: 6px;
-      overflow-x: auto;
+      gap: 5px;
     }
 
     .time-chip {
       background: #1e293b;
       color: #cbd5e1;
-      border: 1px solid var(--card-border);
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .time-chip:hover, .time-chip:active {
-      border-color: var(--accent);
-      color: #fff;
-    }
-
-    .reset-btn {
-      background: #374151;
-      color: var(--danger);
-      border: 1px solid #4b5563;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .reset-storage-wrap {
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    .clear-data-btn {
-      background: transparent;
-      color: var(--text-muted);
-      border: 1px solid #334155;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
-
-    .clear-data-btn:hover {
-      color: var(--danger);
-      border-color: var(--danger);
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <h1>🎯 Archery <span>Pro</span></h1>
-    <p>Workout Senza Compressione &amp; Registro Tiri</p>
-  </header>
-
-  <div class="nav-tabs">
-    <button class="nav-tab active" id="tab-workout" onclick="switchMainTab('workout')">
-      💪 Allenamento
-    </button>
-    <button class="nav-tab" id="tab-tiro" onclick="switchMainTab('tiro')">
-      🎯 Registro Tiri
-    </button>
-  </div>
-
-  <div class="container">
-
-    <!-- SCHEDA 1: WORKOUT -->
-    <div id="view-workout" class="section-view active">
-      <div class="day-selector">
-        <button class="day-btn active" id="btn-day1" onclick="switchDay(1)">Giorno 1: Trazione &amp; Schiena</button>
-        <button class="day-btn" id="btn-day2" onclick="switchDay(2)">Giorno 2: Spalla d'Arco &amp; Stabilità</button>
-      </div>
-
-      <div id="workout-content"></div>
-
-      <div class="reset-storage-wrap">
-        <button class="clear-data-btn" onclick="clearWorkoutData()">Azzera spunte allenamento</button>
-      </div>
-    </div>
-
-    <!-- SCHEDA 2: REGISTRO TIRO -->
-    <div id="view-tiro" class="section-view">
-      <div class="tiro-header-card">
-        <div class="field-row">
-          <label class="field-label" for="shoot-date">Data:</label>
-          <input type="date" id="shoot-date" class="date-input" onchange="saveShootingData()">
-        </div>
-        <div class="field-row">
-          <label class="field-label" for="shoot-notes">Note:</label>
-          <input type="text" id="shoot-notes" class="date-input" placeholder="Es. 18m, targa 40cm, sensazioni..." onchange="saveShootingData()">
-        </div>
-
-        <div class="counter-box">
-          <div class="counter-display">
-            <span class="counter-title">Frecce Scoccate</span>
-            <span class="counter-number" id="quick-arrow-counter">0</span>
-          </div>
-          <div class="quick-arrow-btns">
-            <button class="quick-btn" onclick="addQuickArrows(1)">+1 🏹</button>
-            <button class="quick-btn" onclick="addQuickArrows(3)">+3 (Volée)</button>
-            <button class="quick-btn" onclick="addQuickArrows(6)">+6</button>
-            <button class="quick-btn" style="color:var(--danger);" onclick="addQuickArrows(-1)">-1</button>
-          </div>
-        </div>
-
-        <div class="score-summary">
-          <div class="summary-item">
-            <div class="num" id="stat-total-arrows">0</div>
-            <div class="lbl">Frecce a Tabellone</div>
-          </div>
-          <div class="summary-item">
-            <div class="num" id="stat-total-score">0</div>
-            <div class="lbl">Punti Totali</div>
-          </div>
-          <div class="summary-item">
-            <div class="num" id="stat-avg-score">0.0</div>
-            <div class="lbl">Media/Freccia</div>
-          </div>
-          <div class="summary-item">
-            <div class="num" id="stat-center-count">0</div>
-            <div class="lbl">Al Centro (🎯)</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="arrows-container" class="arrows-list"></div>
-
-      <div class="tiro-actions">
-        <button class="add-arrow-btn" onclick="addNewArrow()">
-          ➕ Aggiungi Freccia con Punteggio
-        </button>
-        <button class="export-excel-btn" onclick="exportToExcelCSV()">
-          📊 Esporta Sessione in Excel (.csv)
-        </button>
-        <button class="clear-data-btn" style="margin-top: 10px;" onclick="resetCurrentSession()">
-          Azzera dati della sessione corrente
-        </button>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="timer-bar">
-    <div class="timer-display">
-      <div class="timer-ring-container">
-        <svg class="timer-ring" width="44" height="44">
-          <circle cx="22" cy="22" r="18" stroke="#334155" stroke-width="3" fill="transparent"/>
-          <circle id="timer-progress" cx="22" cy="22" r="18" stroke="#10b981" stroke-width="3" fill="transparent"
-                  stroke-dasharray="113.1" stroke-dashoffset="0"/>
-        </svg>
-        <span class="timer-seconds" id="timer-text">0s</span>
-      </div>
-      <div>
-        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Recupero</div>
-        <div style="font-size: 0.85rem; font-weight: 700;" id="timer-status">Pronto</div>
-      </div>
-    </div>
-
-    <div class="timer-controls">
-      <button class="time-chip" onclick="startTimer(30)">30s</button>
-      <button class="time-chip" onclick="startTimer(60)">60s</button>
-      <button class="time-chip" onclick="startTimer(90)">90s</button>
-      <button class="time-chip" onclick="startTimer(120)">2m</button>
-      <button class="reset-btn" onclick="stopTimer()">✕</button>
-    </div>
-  </div>
-
-  <script>
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playBeep(freq = 880, duration = 0.15) {
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + duration);
-    }
-
-    function switchMainTab(tab) {
-      document.getElementById('tab-workout').classList.toggle('active', tab === 'workout');
-      document.getElementById('tab-tiro').classList.toggle('active', tab === 'tiro');
-      document.getElementById('view-workout').classList.toggle('active', tab === 'workout');
-      document.getElementById('view-tiro').classList.toggle('active', tab === 'tiro');
-    }
-
-    const workouts = {
-      1: [
-        {
-          id: "w1_pullups",
-          title: "Trazioni alla Sbarra (o Negative)",
-          target: "Dorsali, Romboidi",
-          wrist: "Presa neutra o prona a uncino (polso perfettamente in asse)",
-          image: "img/trazioni.jpg",
-          instructions: "<strong>Come farlo:</strong><br>1. Afferra la sbarra con presa neutra (palmi che si guardano) o presa prona con le dita a uncino.<br>2. <em>Non piegare il polso:</em> mantienilo dritto in linea con l'avambraccio.<br>3. Tira il petto verso la sbarra portando i gomiti verso il basso e indietro, stringendo forte le scapole.<br>4. <em>Se non riesci a salire:</em> sali con un balzo o con una sedia e scendi lentamente controllando la discesa per 4-5 secondi (ripetizione negativa).",
-          defaultRest: 90,
-          sets: [
-            { rep: "5", load: "Corpo" },
-            { rep: "5", load: "Corpo" },
-            { rep: "5", load: "Corpo" },
-            { rep: "5", load: "Corpo" }
-          ]
-        },
-        {
-          id: "w1_row",
-          title: "Rematore a 1 Braccio con Manubrio",
-          target: "Romboidi & Gran Dorsale",
-          wrist: "Presa a martello; appoggia il gomito, non il palmo a terra",
-          image: "img/rematore.jpg",
-          instructions: "<strong>Come farlo:</strong><br>1. In piedi o a ginocchia leggermente flesse, inclina il busto in avanti a 45°-60° con la schiena dritta.<br>2. Appoggia l'avambraccio/gomito libero su una sedia o tavolo (NON appoggiare il palmo aperto per non comprimere il polso).<br>3. Con l'altra mano afferra il manubrio da 7.5 kg con presa a martello (palmo verso il corpo).<br>4. Tira indietro il gomito facendolo scorrere radente al fianco, pensando a portare indietro la scapola. Trattieni 1 secondo in cima e scendi lentamente.",
-          defaultRest: 60,
-          sets: [
-            { rep: "12", load: "7.5 kg" },
-            { rep: "12", load: "7.5 kg" },
-            { rep: "12", load: "7.5 kg" }
-          ]
-        },
-        {
-          id: "w1_ytw",
-          title: "Y-T-W a Terra (Prono)",
-          target: "Depressori & Retrattori Scapolari",
-          wrist: "Pollici al soffitto, dita rilassate, zero carico articolare",
-          image: "img/ytw.jpg",
-          instructions: "<strong>Come farlo:</strong><br>1. Sdraiati a pancia in giù sul tappetino con la fronte appoggiata (collo rilassato).<br>2. <strong>Y:</strong> Braccia a 45° verso l'alto con i pollici rivolti al soffitto. Solleva le braccia stringendo le scapole verso il basso.<br>3. <strong>T:</strong> Braccia aperte a 90° a croce, pollici al soffitto. Solleva stringendo le scapole al centro.<br>4. <strong>W:</strong> Piega i gomiti verso i fianchi a forma di W e solleva gli avambracci.<br><em>Esegui 8 ripetizioni per ciascuna posizione fermandoti 2 secondi in cima.</em>",
-          defaultRest: 60,
-          sets: [
-            { rep: "8 Y-T-W", load: "Corpo" },
-            { rep: "8 Y-T-W", load: "Corpo" },
-            { rep: "8 Y-T-W", load: "Corpo" }
-          ]
-        },
-        {
-          id: "w1_deadhang",
-          title: "Dead Hang (Sospensione Passiva)",
-          target: "Decompressione Spalle & Grip",
-          wrist: "Trazione pura decompressione; zero carico flessorio",
-          image: "img/deadhang.jpg",
-          instructions: "<strong>Come farlo:</strong><br>1. Afferra saldamente la sbarra per trazioni con le mani alla larghezza delle spalle.<br>2. Stacca i piedi da terra e lasciati semplicemente appendere a braccia completamente distese.<br>3. Rilassa le spalle, la schiena e le gambe lasciando che la forza di gravità allunghi la colonna vertebrale e apra le articolazioni delle spalle.<br>4. Respira con calma e mantieni la posizione per 20-30 secondi.",
-          defaultRest: 60,
-          sets: [
-            { rep: "25s", load: "Corpo" },
-            { rep: "25s", load: "Corpo" },
-            { rep: "25s", load: "Corpo" }
-          ]
-        },
-        {
-          id: "w1_deadbug",
-          title: "Dead Bug",
-          target: "Core & Stabilità Pelvica",
-          wrist: "Mani libere in aria, nessun contatto sul carpo",
-          image: "img/deadbug.jpg",
-          instructions: "<strong>Come farlo:</strong><br>1. Sdraiati supino sulla schiena: braccia tese verso il soffitto e ginocchia piegate a 90° a tavolino.<br>2. <em>Regola fondamentale:</em> Schiaccia forte la parte bassa della schiena contro il pavimento (non deve passare aria).<br>3. Lentamente distendi all'indietro il braccio destro mentre allunghi in avanti la gamba sinistra sfiorando il pavimento.<br>4. Torna al centro e ripeti con braccio sinistro e gamba destra. Polsi completamente liberi da sforzi.",
-          defaultRest: 45,
-          sets: [
-            { rep: "10 per lato", load: "Corpo" },
-            { rep: "10 per lato", load: "Corpo" },
-            { rep: "10 per lato", load: "Corpo" }
-          ]
-        }
-      ],
-      2: [
-        {
-          id: "w2_scappull",
-          title: "Trazioni Scapolari alla Sbarra",
-          target: "Depressori Scapola (Blocco Arco)",
-          wrist: "Braccia distese, gomiti bloccati; muovi solo le scapole",
-          image: "img/scapolari.jpg",
-          instructions: "<strong>Come farlo:</strong><br>1. Appenditi alla sbarra con le braccia completamente tese e i gomiti bloccati.<br>2. Senza piegare minimamente le braccia, tira le spalle verso il basso spingendo il petto leggermente verso l'alto (depressione scapolare).<br>3. Il corpo si solleverà di soli 5-8 cm grazie al solo movimento delle scapole.<br>4. Trattieni la contrazione per 1-2 secondi e torna lentamente nella sospensione passiva. Fondamentale per bloccare la spalla d'arco.",
-          defaultRest: 60,
-          sets: [
-            { rep: "10", load: "Corpo" },
-            { rep: "10", load: "Corpo" },
-            { rep: "10", load: "Corpo" }
-          ]
-        },
-        {
-          id: "w2_reardelt",
-          title: "Alzate Posteriori a 90° con Manubri",
-          target: "Deltoide Posteriore (Tenuta Sgancio)",
-          wrist: "Presa neutra solida, gomiti morbidi ma fissi",
-          image: "img/alzate.jpg",
-          instructions: "<strong>Come farlo:</strong><br>1. In piedi, piedi alla larghezza delle spalle. Piega le ginocchia e fletti il busto in avanti quasi parallelo a terra (schiena dritta come un tavolo).<br>2. Tieni i manubri da 7.5 kg pendenti con i palmi rivolti uno verso l'altro (presa neutra).<br>3. Mantenendo i gomiti leggermente piegati ma bloccati, apri le braccia verso l'esterno a croce fino all'altezza delle spalle.<br>4. Stringi forte la parte alta della schiena e i deltoidi posteriori, poi controlla la discesa in 2 secondi.",
-          defaultRest: 60,
-          sets: [
-            { rep: "12", load: "7.5 kg" },
-            { rep: "12", load: "7.5 kg" },
-            { rep: "12", load: "7.5 kg" }
-          ]
-        },
-        {
-          id: "w2_lunges",
-          title: "Affondi Statici con Manubri",
-          target: "Stabilità Monopodalica & Bacino",
-          wrist: "Braccia lungo i fianchi come zavorra",
-          image: "img/affondi.jpg",
-          instructions: "<strong>Come farlo:</strong><br>1. Fai un passo lungo in avanti. Tieni i due manubri da 7.5 kg distesi lungo i fianchi (braccia a peso morto, polsi rilassati dritti).<br>2. Scendi verso il basso piegando entrambe le gambe fino a formare un angolo di 90° con entrambe le ginocchia (il ginocchio dietro sfiora il pavimento).<br>3. Busto perfettamente dritto e verticale (aiuta l'equilibrio della linea di tiro).<br>4. Spingi con il tallone anteriore per risalire. Esegui tutte le ripetizioni su una gamba prima di cambiare.",
-          defaultRest: 60,
-          sets: [
-            { rep: "10 per lato", load: "2x7.5 kg" },
-            { rep: "10 per lato", load: "2x7.5 kg" },
-            { rep: "10 per lato", load: "2x7.5 kg" }
-          ]
-        },
-        {
-          id: "w2_wallslides",
-          title: "Scapular Wall Slides al Muro",
-          target: "Dentato Anteriore (Spalla d'Arco)",
-          wrist: "Gomiti e dorso mano sfiorano il muro senza forzare",
-          image: "img/wallslides.jpg",
-          instructions: "<strong>Come farlo:</strong><br>1. Mettiti in piedi con la schiena appoggiata al muro. Fletti leggermente le ginocchia per tenere tutta la colonna lombare a contatto col muro.<br>2. Appoggia i gomiti e il dorso delle mani alla parete formando una 'W' con le braccia.<br>3. Facendo scivolare gomiti e mani lungo il muro, spingi le braccia verso l'alto a formare una 'Y', senza mai staccare la schiena né i gomiti.<br>4. Ritorna lentamente in basso. Rinforza il dentato anteriore, il muscolo chiave che impedisce alla spalla dell'arco di alzarsi mentre miri.",
-          defaultRest: 60,
-          sets: [
-            { rep: "12", load: "Corpo" },
-            { rep: "12", load: "Corpo" },
-            { rep: "12", load: "Corpo" }
-          ]
-        },
-        {
-          id: "w2_plank",
-          title: "Plank su Avambracci",
-          target: "Core Anti-Estensione",
-          wrist: "Appoggio su gomito e avambraccio, dita distese",
-          image: "img/plank.jpg",
-          instructions: "<strong>Come farlo:</strong><br>1. Posizionati prono sul tappetino appoggiando <strong>solo gomiti e avambracci</strong> (gomiti perpendicolari sotto le spalle).<br>2. Mani rilassate aperte o a pugno morbido: ZERO pressione sulle articolazioni del carpo.<br>3. Solleva il bacino puntando i piedi: il corpo deve formare una linea retta perfetta dalla testa ai talloni.<br>4. Contrai addome e glutei senza mai inarcare la schiena in basso. Mantieni la posizione respirando regolarmente.",
-          defaultRest: 60,
-          sets: [
-            { rep: "45s", load: "Corpo" },
-            { rep: "45s", load: "Corpo" },
-            { rep: "45s", load: "Corpo" }
-          ]
-        }
-      ]
-    };
-
-    let currentDay = 1;
-
-    function toggleGuide(id) {
-      const box = document.getElementById(`guide_${id}`);
-      const btn = document.getElementById(`btn_guide_${id}`);
-      if (box.classList.contains('show')) {
-        box.classList.remove('show');
-        btn.innerHTML = '📖 Come si fa?';
-      } else {
-        box.classList.add('show');
-        btn.innerHTML = '✕ Chiudi spiegazione';
-      }
-    }
-
-    function renderWorkout(day) {
-      const container = document.getElementById('workout-content');
-      container.innerHTML = '';
-
-      workouts[day].forEach(ex => {
-        const card = document.createElement('div');
-        card.className = 'card';
-
-        let setsHtml = '';
-        ex.sets.forEach((set, idx) => {
-          const keyDone = `${ex.id}_s${idx}_done`;
-          const keyReps = `${ex.id}_s${idx}_reps`;
-          const keyLoad = `${ex.id}_s${idx}_load`;
-
-          const isDone = localStorage.getItem(keyDone) === 'true';
-          const savedReps = localStorage.getItem(keyReps) || set.rep;
-          const savedLoad = localStorage.getItem(keyLoad) || set.load;
-
-          setsHtml += `
-            <div class="set-row">
-              <span class="set-label">Set ${idx + 1}</span>
-              <input class="input-field" type="text" value="${savedLoad}" 
-                     onchange="localStorage.setItem('${keyLoad}', this.value)" placeholder="Carico">
-              <input class="input-field" type="text" value="${savedReps}" 
-                     onchange="localStorage.setItem('${keyReps}', this.value)" placeholder="Rip">
-              <button class="check-btn ${isDone ? 'completed' : ''}" 
-                      id="btn_${ex.id}_${idx}" 
-                      onclick="toggleSet('${ex.id}', ${idx}, ${ex.defaultRest})">
-                ${isDone ? '✓' : ''}
-              </button>
-            </div>
-          `;
-        });
-
-        const imageHtml = ex.image ? `
-          <div class="exercise-img-wrap">
-            <img src="${ex.image}" alt="${ex.title}" loading="lazy" onerror="this.parentElement.style.display='none'">
-          </div>
-        ` : '';
-
-        card.innerHTML = `
-          <div class="card-header">
-            <div>
-              <div class="exercise-title">${ex.title}</div>
-            </div>
-            <span class="target-badge">${ex.target}</span>
-          </div>
-          <div class="wrist-shield">🛡️ Polso: ${ex.wrist}</div>
-
-          <div>
-            <button class="guide-toggle-btn" id="btn_guide_${ex.id}" onclick="toggleGuide('${ex.id}')">
-              📖 Come si fa?
-            </button>
-          </div>
-
-          <div class="guide-box" id="guide_${ex.id}">
-            ${ex.instructions}
-          </div>
-
-          ${imageHtml}
-          <div class="sets-grid">${setsHtml}</div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function switchDay(day) {
-      currentDay = day;
-      document.getElementById('btn-day1').classList.toggle('active', day === 1);
-      document.getElementById('btn-day2').classList.toggle('active', day === 2);
-      renderWorkout(day);
-    }
-
-    function toggleSet(exId, setIdx, restSeconds) {
-      const keyDone = `${exId}_s${setIdx}_done`;
-      const btn = document.getElementById(`btn_${exId}_${setIdx}`);
-      const wasDone = localStorage.getItem(keyDone) === 'true';
-
-      if (!wasDone) {
-        localStorage.setItem(keyDone, 'true');
-        btn.classList.add('completed');
-        btn.innerText = '✓';
-        startTimer(restSeconds);
-      } else {
-        localStorage.removeItem(keyDone);
-        btn.classList.remove('completed');
-        btn.innerText = '';
-      }
-    }
-
-    function clearWorkoutData() {
-      if (confirm('Vuoi azzerare tutte le serie completate di questa scheda?')) {
-        Object.keys(localStorage).forEach(k => {
-          if (k.endsWith('_done')) localStorage.removeItem(k);
-        });
-        renderWorkout(currentDay);
-        stopTimer();
-      }
-    }
-
-    let timerInterval = null;
-    let totalTime = 0;
-    let remainingTime = 0;
-    const ringCircle = document.getElementById('timer-progress');
-    const circumference = 2 * Math.PI * 18;
-
-    function startTimer(seconds) {
-      clearInterval(timerInterval);
-      totalTime = seconds;
-      remainingTime = seconds;
-      document.getElementById('timer-status').innerText = 'In corso...';
-      updateTimerUI();
-
-      timerInterval = setInterval(() => {
-        remainingTime--;
-        updateTimerUI();
-
-        if (remainingTime <= 0) {
-          clearInterval(timerInterval);
-          document.getElementById('timer-status').innerText = 'Fatto!';
-          playBeep(880, 0.2);
-          setTimeout(() => playBeep(1200, 0.3), 250);
-          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-        }
-      }, 1000);
-    }
-
-    function stopTimer() {
-      clearInterval(timerInterval);
-      remainingTime = 0;
-      updateTimerUI();
-      document.getElementById('timer-status').innerText = 'Fermato';
-    }
-
-    function updateTimerUI() {
-      document.getElementById('timer-text').innerText = `${remainingTime}s`;
-      const offset = totalTime > 0 ? circumference - (remainingTime / totalTime) * circumference : 0;
-      ringCircle.style.strokeDashoffset = offset;
-    }
-
-    let arrows = [];
-    let quickShotCount = 0;
-
-    function initShootingDate() {
-      const savedDate = localStorage.getItem('archery_shoot_date');
-      const savedNotes = localStorage.getItem('archery_shoot_notes');
-      const savedQuickCount = localStorage.getItem('archery_quick_count');
-      const dateEl = document.getElementById('shoot-date');
-      const notesEl = document.getElementById('shoot-notes');
-
-      dateEl.value = savedDate || new Date().toISOString().split('T')[0];
-      if (savedNotes) notesEl.value = savedNotes;
-
-      quickShotCount = savedQuickCount ? parseInt(savedQuickCount, 10) : 0;
-      if (isNaN(quickShotCount)) quickShotCount = 0;
-      document.getElementById('quick-arrow-counter').innerText = quickShotCount;
-
-      const savedArrows = localStorage.getItem('archery_arrows');
-      if (savedArrows) {
-        try {
-          arrows = JSON.parse(savedArrows);
-        } catch(e) {
-          arrows = [];
-        }
-      }
-      renderArrows();
-    }
-
-    function saveShootingData() {
-      localStorage.setItem('archery_shoot_date', document.getElementById('shoot-date').value);
-      localStorage.setItem('archery_shoot_notes', document.getElementById('shoot-notes').value);
-      localStorage.setItem('archery_quick_count', quickShotCount);
-      localStorage.setItem('archery_arrows', JSON.stringify(arrows));
-      updateStats();
-    }
-
-    function addQuickArrows(amount) {
-      quickShotCount = Math.max(0, quickShotCount + amount);
-      document.getElementById('quick-arrow-counter').innerText = quickShotCount;
-      saveShootingData();
-    }
-
-    function addNewArrow() {
-      arrows.push({
-        score: "10",
-        direction: "C"
-      });
-      if (quickShotCount < arrows.length) {
-        quickShotCount = arrows.length;
-        document.getElementById('quick-arrow-counter').innerText = quickShotCount;
-      }
-      saveShootingData();
-      renderArrows();
-    }
-
-    function deleteArrow(index) {
-      arrows.splice(index, 1);
-      saveShootingData();
-      renderArrows();
-    }
-
-    function updateScore(index, val) {
-      arrows[index].score = val;
-      saveShootingData();
-    }
-
-    function toggleDirection(index, dir) {
-      arrows[index].direction = (arrows[index].direction === dir) ? "C" : dir;
-      saveShootingData();
-      renderArrows();
-    }
-
-    function renderArrows() {
-      const container = document.getElementById('arrows-container');
-      container.innerHTML = '';
-
-      arrows.forEach((arr, idx) => {
-        const item = document.createElement('div');
-        item.className = 'arrow-card';
-
-        const isUp = arr.direction === 'U';
-        const isDown = arr.direction === 'D';
-        const isLeft = arr.direction === 'L';
-        const isRight = arr.direction === 'R';
-        const isCenter = arr.direction === 'C';
-
-        item.innerHTML = `
-          <div class="arrow-num">#${idx + 1}</div>
-          <select class="score-select" onchange="updateScore(${idx}, this.value)">
-            <option value="10" ${arr.score === '10' ? 'selected' : ''}>10 (X)</option>
-            <option value="9" ${arr.score === '9' ? 'selected' : ''}>9</option>
-            <option value="8" ${arr.score === '8' ? 'selected' : ''}>8</option>
-            <option value="7" ${arr.score === '7' ? 'selected' : ''}>7</option>
-            <option value="6" ${arr.score === '6' ? 'selected' : ''}>6</option>
-            <option value="5" ${arr.score === '5' ? 'selected' : ''}>5</option>
-            <option value="4" ${arr.score === '4' ? 'selected' : ''}>4</option>
-            <option value="3" ${arr.score === '3' ? 'selected' : ''}>3</option>
-            <option value="2" ${arr.score === '2' ? 'selected' : ''}>2</option>
-            <option value="1" ${arr.score === '1' ? 'selected' : ''}>1</option>
-            <option value="0" ${arr.score === '0' ? 'selected' : ''}>0 (M)</option>
-          </select>
-
-          <div class="dir-cluster">
-            <button class="dir-btn ${isUp ? 'active' : ''}" title="Sopra" onclick="toggleDirection(${idx}, 'U')">▲</button>
-            <button class="dir-btn ${isLeft ? 'active' : ''}" title="Sinistra" onclick="toggleDirection(${idx}, 'L')">◀</button>
-            <button class="dir-btn ${isCenter ? 'active' : ''}" title="Centro esatto" onclick="toggleDirection(${idx}, 'C')">🎯</button>
-            <button class="dir-btn ${isRight ? 'active' : ''}" title="Destra" onclick="toggleDirection(${idx}, 'R')">▶</button>
-            <button class="dir-btn ${isDown ? 'active' : ''}" title="Sotto" onclick="toggleDirection(${idx}, 'D')">▼</button>
-          </div>
-
-          <button class="del-arrow-btn" onclick="deleteArrow(${idx})" title="Elimina freccia">✕</button>
-        `;
-
-        container.appendChild(item);
-      });
-
-      updateStats();
-    }
-
-    function updateStats() {
-      const totalArrows = arrows.length;
-      let totalScore = 0;
-      let centerCount = 0;
-
-      arrows.forEach(a => {
-        const pts = parseInt(a.score, 10);
-        if (!isNaN(pts)) totalScore += pts;
-        if (a.direction === 'C') centerCount++;
-      });
-
-      const avg = totalArrows > 0 ? (totalScore / totalArrows).toFixed(2) : "0.0";
-
-      document.getElementById('stat-total-arrows').innerText = totalArrows;
-      document.getElementById('stat-total-score').innerText = totalScore;
-      document.getElementById('stat-avg-score').innerText = avg;
-      document.getElementById('stat-center-count').innerText = centerCount;
-    }
-
-    function resetCurrentSession() {
-      if (confirm('Vuoi azzerare tutte le frecce e il contatore della sessione corrente?')) {
-        arrows = [];
-        quickShotCount = 0;
-        document.getElementById('quick-arrow-counter').innerText = '0';
-        saveShootingData();
-        renderArrows();
-      }
-    }
-
-    function exportToExcelCSV() {
-      if (arrows.length === 0 && quickShotCount === 0) {
-        alert("Nessun tiro registrato da esportare.");
-        return;
-      }
-
-      const date = document.getElementById('shoot-date').value || new Date().toISOString().split('T')[0];
-      const notes = (document.getElementById('shoot-notes').value || "").replace(/"/g, '""');
-
-      const dirMap = {
-        'U': 'Sopra (Alto)',
-        'D': 'Sotto (Basso)',
-        'L': 'Sinistra',
-        'R': 'Destra',
-        'C': 'Centro'
-      };
-
-      let csvContent = "\uFEFF";
-      csvContent += "Data;Numero Freccia;Punteggio;Deviazione;Note Sessione\r\n";
-
-      arrows.forEach((arr, idx) => {
-        const dirText = dirMap[arr.direction] || 'Centro';
-        csvContent += `"${date}";${idx + 1};${arr.score};"${dirText}";"${notes}"\r\n`;
-      });
-
-      let sum = arrows.reduce((acc, a) => acc + (parseInt(a.score) || 0), 0);
-      let avg = arrows.length > 0 ? (sum / arrows.length).toFixed(2).replace('.', ',') : "0,00";
-
-      csvContent += `\r\n"FRECCE TOTALI CONTATE";${quickShotCount};"";"";""\r\n`;
-      csvContent += `"FRECCE A TABELLONE";${arrows.length};"";"";""\r\n`;
-      csvContent += `"TOTALE PUNTI";${sum};"";"";""\r\n`;
-      csvContent += `"MEDIA PER FRECCIA";${avg};"";"";""\r\n`;
-
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `tiro_arco_${date}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    ringCircle.style.strokeDasharray = `${circumference} ${circumference}`;
-    renderWorkout(1);
-    initShootingDate();
-  </script>
-</body>
-</html>
